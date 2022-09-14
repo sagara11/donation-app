@@ -1,0 +1,5 @@
+DEFINE_NEAR_METHOD(change_beneficiary)
+DEFINE_NEAR_METHOD(donate)
+DEFINE_NEAR_METHOD(get_beneficiary)
+DEFINE_NEAR_METHOD(init)
+DEFINE_NEAR_METHOD(number_of_donors)

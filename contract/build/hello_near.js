@@ -940,13 +940,23 @@ class UnorderedMapIterator {
 }
 
 const STORAGE_COST = BigInt("1000000000000000000000");
+class Donation {
+  constructor({
+    account_id,
+    total_amount
+  }) {
+    this.account_id = account_id;
+    this.total_amount = total_amount;
+  }
 
-var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _class, _class2;
+}
+
+var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _class, _class2;
 let DonationContract = (_dec = NearBindgen({}), _dec2 = initialize({}), _dec3 = call({
   payableFunction: true
 }), _dec4 = call({
   privateFunction: true
-}), _dec5 = view({}), _dec6 = view({}), _dec(_class = (_class2 = class DonationContract {
+}), _dec5 = view({}), _dec6 = view({}), _dec7 = view({}), _dec8 = view({}), _dec(_class = (_class2 = class DonationContract {
   beneficiary = "v1.faucet.nonofficial.testnet";
   donations = new UnorderedMap('map-uid-1');
 
@@ -992,7 +1002,70 @@ let DonationContract = (_dec = NearBindgen({}), _dec2 = initialize({}), _dec3 = 
     return this.donations.length;
   }
 
-}, (_applyDecoratedDescriptor(_class2.prototype, "init", [_dec2], Object.getOwnPropertyDescriptor(_class2.prototype, "init"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "donate", [_dec3], Object.getOwnPropertyDescriptor(_class2.prototype, "donate"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "change_beneficiary", [_dec4], Object.getOwnPropertyDescriptor(_class2.prototype, "change_beneficiary"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "get_beneficiary", [_dec5], Object.getOwnPropertyDescriptor(_class2.prototype, "get_beneficiary"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "number_of_donors", [_dec6], Object.getOwnPropertyDescriptor(_class2.prototype, "number_of_donors"), _class2.prototype)), _class2)) || _class);
+  get_donations({
+    from_index = 0,
+    limit = 50
+  }) {
+    let ret = [];
+    let end = Math.min(limit, this.donations.length);
+
+    for (let i = from_index; i < end; i++) {
+      const account_id = this.donations.keys.get(i);
+      const donation = this.get_donation_for_account({
+        account_id
+      });
+      ret.push(donation);
+    }
+
+    return ret;
+  }
+
+  get_donation_for_account({
+    account_id
+  }) {
+    return new Donation({
+      account_id,
+      total_amount: this.donations.get(account_id)
+    });
+  }
+
+}, (_applyDecoratedDescriptor(_class2.prototype, "init", [_dec2], Object.getOwnPropertyDescriptor(_class2.prototype, "init"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "donate", [_dec3], Object.getOwnPropertyDescriptor(_class2.prototype, "donate"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "change_beneficiary", [_dec4], Object.getOwnPropertyDescriptor(_class2.prototype, "change_beneficiary"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "get_beneficiary", [_dec5], Object.getOwnPropertyDescriptor(_class2.prototype, "get_beneficiary"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "number_of_donors", [_dec6], Object.getOwnPropertyDescriptor(_class2.prototype, "number_of_donors"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "get_donations", [_dec7], Object.getOwnPropertyDescriptor(_class2.prototype, "get_donations"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "get_donation_for_account", [_dec8], Object.getOwnPropertyDescriptor(_class2.prototype, "get_donation_for_account"), _class2.prototype)), _class2)) || _class);
+function get_donation_for_account() {
+  let _state = DonationContract._getState();
+
+  if (!_state && DonationContract._requireInit()) {
+    throw new Error("Contract must be initialized");
+  }
+
+  let _contract = DonationContract._create();
+
+  if (_state) {
+    DonationContract._reconstruct(_contract, _state);
+  }
+
+  let _args = DonationContract._getArgs();
+
+  let _result = _contract.get_donation_for_account(_args);
+  if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(DonationContract._serialize(_result));
+}
+function get_donations() {
+  let _state = DonationContract._getState();
+
+  if (!_state && DonationContract._requireInit()) {
+    throw new Error("Contract must be initialized");
+  }
+
+  let _contract = DonationContract._create();
+
+  if (_state) {
+    DonationContract._reconstruct(_contract, _state);
+  }
+
+  let _args = DonationContract._getArgs();
+
+  let _result = _contract.get_donations(_args);
+  if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(DonationContract._serialize(_result));
+}
 function number_of_donors() {
   let _state = DonationContract._getState();
 
@@ -1087,5 +1160,5 @@ function init() {
   if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(DonationContract._serialize(_result));
 }
 
-export { change_beneficiary, donate, get_beneficiary, init, number_of_donors };
+export { change_beneficiary, donate, get_beneficiary, get_donation_for_account, get_donations, init, number_of_donors };
 //# sourceMappingURL=hello_near.js.map
